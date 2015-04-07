@@ -44,6 +44,7 @@ var app = {
       url: app.server,
       type: 'GET',
       contentType: 'application/json',
+      data: {order: '-createdAt'},
       success: function (data) {
         // debugger;
         app.clearMessages();
@@ -82,7 +83,15 @@ var app = {
     $wrapper.appendTo('#roomSelect');
   },
 
-  addFriend: function(){
+  addFriend: function(friend){
+    if (!app._friends[friend]) {
+      var $wrapper = $('<div>');
+      var $friend = $('<div class="friend">');
+      $friend.html(friend);
+      $friend.appendTo($wrapper);
+      $wrapper.appendTo('#friendSelect');
+    }
+    app._friends[friend] = friend;
   },
 
   handleSubmit: function(){
@@ -90,6 +99,8 @@ var app = {
   },
 
   _rooms: {},
+
+  _friends: {},
 
   filterByRoom: function(roomname){
     $('.messageWrapper').show();
@@ -99,7 +110,7 @@ var app = {
 
 $(function() {
   $('#chats').on('click', '.username', function(){
-    app.addFriend();
+    app.addFriend($(this).text());
   });
   $('.submit').on('submit', function(e){
     e.preventDefault();
@@ -107,7 +118,7 @@ $(function() {
   });
   $('#roomSelect').on('click', '.roomname', function(){
     app.filterByRoom($(this).text());
-  })
+  });
 });
 
 
