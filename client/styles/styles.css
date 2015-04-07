@@ -3,11 +3,33 @@ body {
     text-align: center;
     padding: 0 25px;
     font-family: arial, sans-serif;
+    font-size: 18px;
+    width: 100%;
+}
+#sidebar {
+    float: left;
+    width: 200px;
+    margin-right: 50px;
+    margin-top: 80px;
+}
+
+#roomSelect, #friendSelect {
+    background-color: white;
+    margin: 20px 0;
+    padding: 5px;
+}
+
+#container {
+    float: left;
+    width: 600px;
+}
+
+#send {
+    height: 100px;
 }
 
 #main {
-    width: 500px;
-    margin: auto;
+    display: inline block;
     text-align: left;
     background: white;
     padding: 50px 60px;
@@ -84,5 +106,7 @@ form input[type=text] {
 }
 
 .messageWrapper {
-
+    border-bottom: 1px solid gray;
+    margin: 10px 0;
+    padding: 10px 0;
 }
