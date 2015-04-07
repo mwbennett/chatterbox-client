@@ -1,3 +1,12 @@
+var badChars = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  '\'': '&#x27;',
+  '/': '&#x2F;'
+};
+
 var addMessageToDOM = function(message) {
   var $wrapper = $('<div></div>');
   $wrapper.addClass('messageWrapper');
@@ -7,7 +16,9 @@ var addMessageToDOM = function(message) {
   $username.addClass('username');
   $username.appendTo($wrapper);
   var $text = $('<div></div>');
-  $text.html((message.text || '').replace(/</g, "&lt;"));
+  $text.html((message.text || '').replace(/[&<>"'\/]/g, function(c) {
+    return badChars[c];
+  }));
   $text.addClass('messageText');
   $text.appendTo($wrapper);
   $('#chats').append($wrapper);
@@ -48,6 +59,7 @@ var app = {
       success: function (data) {
         // debugger;
         app.clearMessages();
+        console.table(data.results);
         if (data.results) {
           _.each(data.results, function(message){
             app._rooms[message.roomname] = message.roomname;
@@ -57,7 +69,6 @@ var app = {
         _.each(app._rooms, function(room){
           app.addRoom(room);
         });
-        console.table(data.results);
         console.log('chatterbox: Message sent');
       },
       error: function (data) {
