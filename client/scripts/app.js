@@ -16,7 +16,7 @@ var app = {
   server: 'https://api.parse.com/1/classes/chatterbox',
 
   init: function() {
-    app.clearMessages();
+    // app.clearMessages();
 
   },
 
@@ -76,17 +76,26 @@ var app = {
     $room.html(room);
     $room.appendTo($wrapper);
     $wrapper.appendTo('#roomSelect');
+  },
+
+  addFriend: function(){
+  },
+
+  handleSubmit: function(){
+
   }
 };
 
 $(function() {
-app.addMessage({
-          username: 'Mel Brooks',
-          text: 'Never underestimate the power of the Schwartz!',
-          roomname: 'lobby'
-        });
+  $('#chats').on('click', '.username', function(){
+    app.addFriend();
+  });
+  $('.submit').on('submit', function(e){
+    e.preventDefault();
+    app.handleSubmit();
+  });
+});
 
-})
 
 // app.fetch();
 // setInterval(app.fetch, 5000);
