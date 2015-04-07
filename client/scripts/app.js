@@ -1,6 +1,7 @@
 var addMessageToDOM = function(message) {
   var $wrapper = $('<div></div>');
   $wrapper.addClass('messageWrapper');
+  $wrapper.attr('data-roomname', message.roomname);
   var $username = $('<div></div>');
   $username.html(message.username);
   $username.addClass('username');
@@ -23,7 +24,6 @@ var app = {
   send: function(message) {
     $.ajax({
       url: app.server,
-      headers: {'X-Parse-Application-Id': "voLazbq9nXuZuos9hsmprUz7JwM2N0asnPnUcI7r", "X-Parse-REST-API-Key": "QC2F43aSAghM97XidJw8Qiy1NXlpL5LR45rhAVAf"},
       type: 'POST',
       contentType: 'application/json',
       data: JSON.stringify(message),
@@ -49,9 +49,13 @@ var app = {
         app.clearMessages();
         if (data.results) {
           _.each(data.results, function(message){
+            app._rooms[message.roomname] = message.roomname;
             addMessageToDOM(message);
           });
         }
+        _.each(app._rooms, function(room){
+          app.addRoom(room);
+        });
         console.table(data.results);
         console.log('chatterbox: Message sent');
       },
@@ -72,7 +76,7 @@ var app = {
 
   addRoom: function(room) {
     var $wrapper = $('<div>');
-    var $room = $('<div class="room">');
+    var $room = $('<div class="roomname">');
     $room.html(room);
     $room.appendTo($wrapper);
     $wrapper.appendTo('#roomSelect');
@@ -83,6 +87,13 @@ var app = {
 
   handleSubmit: function(){
 
+  },
+
+  _rooms: {},
+
+  filterByRoom: function(roomname){
+    $('.messageWrapper').show();
+    $('.messageWrapper[data-roomname!="' + roomname + '"]').hide();
   }
 };
 
@@ -94,6 +105,9 @@ $(function() {
     e.preventDefault();
     app.handleSubmit();
   });
+  $('#roomSelect').on('click', '.roomname', function(){
+    app.filterByRoom($(this).text());
+  })
 });
 
 
