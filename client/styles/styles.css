@@ -19,6 +19,11 @@ body {
     padding: 5px;
 }
 
+#allRooms {
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
 #container {
     float: left;
     width: 600px;
@@ -106,7 +111,7 @@ form input[type=text] {
 }
 
 .messageWrapper {
-    border-bottom: 1px solid gray;
+    border-bottom: 1px solid #D3D3D3;
     margin: 10px 0;
     padding: 10px 0;
 }
