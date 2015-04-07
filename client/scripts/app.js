@@ -1,30 +1,15 @@
-var escapeText = function(string){
-  string = string || "";
-  var badChars = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    '\'': '&#x27;',
-    '/': '&#x2F;'
-  };
-  return (string).replace(/[&<>"'\/\\]/g, function(c) {
-    return badChars[c];
-  });
-};
-
 var addMessageToDOM = function(message) {
   var $wrapper = $('<div></div>');
   $wrapper.addClass('messageWrapper');
-  $wrapper.attr('data-roomname', escapeText(message.roomname));
+  $wrapper.attr('data-roomname', message.roomname);
   var $username = $('<div></div>');
   var $anchor = $('<a href="#">');
-  $anchor.text(escapeText(message.username));
+  $anchor.text(message.username);
   $anchor.appendTo($username);
   $username.addClass('username');
   $username.appendTo($wrapper);
   var $text = $('<div></div>');
-  $text.html(escapeText(message.text));
+  $text.text(message.text);
   $text.addClass('messageText');
   $text.appendTo($wrapper);
   $('#chats').append($wrapper);
@@ -83,7 +68,7 @@ var app = {
   },
 
   clearMessages: function() {
-    $('#chats').html('');
+    $('#chats').text('');
   },
 
   addMessage: function(message) {
@@ -94,7 +79,7 @@ var app = {
     var $wrapper = $('<div>');
     var $room = $('<div class="roomname">');
     var $anchor = $('<a href="#">');
-    $anchor.text(escapeText(room));
+    $anchor.text(room);
     $anchor.appendTo($room);
     $room.appendTo($wrapper);
     $wrapper.appendTo('#roomSelect');
@@ -105,7 +90,7 @@ var app = {
       var $wrapper = $('<div>');
       var $friend = $('<div class="friend">');
       var $anchor = $('<a href="#">');
-      $anchor.text(escapeText(friend));
+      $anchor.text(friend);
       $anchor.appendTo($friend);
       $friend.appendTo($wrapper);
       $wrapper.appendTo('#friendSelect');
