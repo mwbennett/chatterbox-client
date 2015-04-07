@@ -141,6 +141,11 @@ $(function() {
   });
   $('#roomSelect').on('click', '.roomname', function(){
     app.filterByRoom($(this).text());
+    $('#main .title').text('chatterbox > ' + $(this).text());
+  });
+  $('#allRooms').on('click', function(){
+    app.fetch();
+    $('#main .title').text('chatterbox');
   });
   app.fetch();
 });
