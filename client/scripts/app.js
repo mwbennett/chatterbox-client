@@ -92,6 +92,10 @@ var app = {
       $wrapper.appendTo('#friendSelect');
     }
     app._friends[friend] = friend;
+    var $usernames = $('.username');
+    $usernames.filter(function(i, e){
+      return _.contains(app._friends, $(e).text());
+    }).parent().css('font-weight', 'bold');
   },
 
   handleSubmit: function(){
