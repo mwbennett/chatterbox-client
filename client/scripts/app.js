@@ -68,14 +68,26 @@ var app = {
 
   addMessage: function(message) {
     addMessageToDOM(message);
+  },
+
+  addRoom: function(room) {
+    var $wrapper = $('<div>');
+    var $room = $('<div class="room">');
+    $room.html(room);
+    $room.appendTo($wrapper);
+    $wrapper.appendTo('#roomSelect');
   }
 };
 
+$(function() {
 app.addMessage({
           username: 'Mel Brooks',
           text: 'Never underestimate the power of the Schwartz!',
           roomname: 'lobby'
         });
+
+})
+
 // app.fetch();
 // setInterval(app.fetch, 5000);
 
