@@ -142,4 +142,6 @@ $(function() {
   $('#roomSelect').on('click', '.roomname', function(){
     app.filterByRoom($(this).text());
   });
+  app.fetch();
 });
+
