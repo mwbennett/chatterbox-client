@@ -12,14 +12,54 @@ var addMessageToDOM = function(message) {
   $text.text(message.text);
   $text.addClass('messageText');
   $text.appendTo($wrapper);
-  $('#chats').append($wrapper);
+  app.$chats.append($wrapper);
 };
 
 var app = {
+  username: 'anonymous',
+  room: 'lobby',
   server: 'https://api.parse.com/1/classes/chatterbox',
 
   init: function() {
-    // app.clearMessages();
+    // Initialize variables
+    app._rooms = {};
+    app._friends = {};
+    app.username = window.location.search.substr(10);
+
+    // selectors
+    app.$chats = $('#chats');
+    app.$roomSelect = $('#roomSelect');
+    app.$friendSelect = $('#friendSelect');
+    app.$message = $('#message');
+
+    // event listeners
+    app.$chats.on('click', '.username', function(){
+      app.addFriend($(this).text());
+    });
+
+    $('.submit').on('submit', function(e){
+      e.preventDefault();
+      app.handleSubmit();
+      app.$message.val('');
+    });
+
+    app.$roomSelect.on('click', '.roomname', function(){
+      var selectedRoom = $(this).text();
+      app.room = selectedRoom;
+      app.filterByRoom(selectedRoom);
+      $('#main .title').text('chatterbox > ' + $(this).text());
+    });
+
+    $('#allRooms').on('click', function(){
+      app.room = 'lobby';
+      app.fetch();
+      $('#main .title').text('chatterbox');
+    });
+
+    // initiate fetch
+    app.fetch();
+    // setInterval for fetch
+    // setInterval(app.fetch, 5000);
   },
 
   send: function(message) {
@@ -29,9 +69,10 @@ var app = {
       contentType: 'application/json',
       data: JSON.stringify(message),
       success: function (data, status, jqXHR) {
-        // if (jqXHR.status === 201){
-        //   addMessageToDOM(message);
-        // }
+        if (jqXHR.status === 201){
+          // addMessageToDOM(message);
+          // app.fetch();
+        }
       },
       error: function (data) {
         console.error('chatterbox: Failed to send message');
@@ -48,6 +89,8 @@ var app = {
       data: {order: '-createdAt'},
       success: function (data) {
         app.clearMessages();
+        app._rooms = {};
+        app.clearRooms();
         console.table(data.results);
         if (data.results) {
           _.each(data.results, function(message){
@@ -68,7 +111,11 @@ var app = {
   },
 
   clearMessages: function() {
-    $('#chats').text('');
+    app.$chats.html('');
+  },
+
+  clearRooms: function() {
+    $('.roomname').remove();
   },
 
   addMessage: function(message) {
@@ -82,7 +129,7 @@ var app = {
     $anchor.text(room);
     $anchor.appendTo($room);
     $room.appendTo($wrapper);
-    $wrapper.appendTo('#roomSelect');
+    $wrapper.appendTo(app.$roomSelect);
   },
 
   addFriend: function(friend){
@@ -93,7 +140,7 @@ var app = {
       $anchor.text(friend);
       $anchor.appendTo($friend);
       $friend.appendTo($wrapper);
-      $wrapper.appendTo('#friendSelect');
+      $wrapper.appendTo(app.$friendSelect);
     }
     app._friends[friend] = friend;
     var $usernames = $('.username');
@@ -103,12 +150,13 @@ var app = {
   },
 
   handleSubmit: function(){
-
+    // var message = {
+    //   username: app.username,
+    //   text: app.$message.val(),
+    //   roomname: app.room
+    // };
+    // app.send(message);
   },
-
-  _rooms: {},
-
-  _friends: {},
 
   filterByRoom: function(roomname){
     $('.messageWrapper').show();
@@ -117,21 +165,6 @@ var app = {
 };
 
 $(function() {
-  $('#chats').on('click', '.username', function(){
-    app.addFriend($(this).text());
-  });
-  $('.submit').on('submit', function(e){
-    e.preventDefault();
-    app.handleSubmit();
-  });
-  $('#roomSelect').on('click', '.roomname', function(){
-    app.filterByRoom($(this).text());
-    $('#main .title').text('chatterbox > ' + $(this).text());
-  });
-  $('#allRooms').on('click', function(){
-    app.fetch();
-    $('#main .title').text('chatterbox');
-  });
-  app.fetch();
+  app.init();
 });
 
